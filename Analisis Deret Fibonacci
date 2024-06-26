@@ -1,0 +1,46 @@
+#include <iostream>
+#include <vector>
+#include <chrono>
+using namespace std;
+using namespace std::chrono;
+
+long long fibonacci_recursive(int n) {
+    if (n <= 1) {
+        return n;
+    }
+    return fibonacci_recursive(n-1) + fibonacci_recursive(n-2);
+}
+
+long long fibonacci_dp(int n) {
+    if (n <= 1) {
+        return n;
+    }
+    vector<long long> fib(n + 1);
+    fib[0] = 0;
+    fib[1] = 1;
+    for (int i = 2; i <= n; ++i) {
+        fib[i] = fib[i - 1] + fib[i - 2];
+    }
+    return fib[n];
+}
+
+int main() {
+    vector<int> n_values = {10, 25, 30, 40, 50};
+    cout << "n\tRecursive Time (ms)\tDP Time (ms)" << endl;
+    
+    for (int n : n_values) {
+        auto start = high_resolution_clock::now();
+        fibonacci_recursive(n);
+        auto end = high_resolution_clock::now();
+        auto recursive_duration = duration_cast<milliseconds>(end - start).count();
+        
+        start = high_resolution_clock::now();
+        fibonacci_dp(n);
+        end = high_resolution_clock::now();
+        auto dp_duration = duration_cast<milliseconds>(end - start).count();
+        
+        cout << n << "\t" << recursive_duration << "\t\t\t" << dp_duration << endl;
+    }
+
+    return 0;
+}
